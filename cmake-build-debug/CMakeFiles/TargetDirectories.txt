@@ -1,0 +1,3 @@
+C:/Users/maddi/CLionProjects/SNP_binaryclock/cmake-build-debug/CMakeFiles/SNP_binaryclock.dir
+C:/Users/maddi/CLionProjects/SNP_binaryclock/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/maddi/CLionProjects/SNP_binaryclock/cmake-build-debug/CMakeFiles/rebuild_cache.dir
