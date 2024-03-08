@@ -35,6 +35,7 @@ ISR (TIMER0_COMPA_vect) {
 
                 //Actions every day
                 if(h >= 24) {
+                    h=0;
 
                 }
             }
