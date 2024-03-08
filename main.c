@@ -8,11 +8,11 @@ volatile uint8_t min;
 volatile uint8_t h;
 
 void main () {
-    TCCR0B |=(1 << CS01 ) ; // ps =8
-    OCR0A =255-1;
-    TCCR0A |=(1 << WGM01 ) ;// enable CTC
-    TIMSK0 |=(1 << OCIE0A ) ;// enable compare interrupt 1A
-    sei () ;// enable global interrupts
+    TCCR0B |= (1 << CS01 );     // ps =8
+    OCR0A = 255 - 1;
+    TCCR0A |= (1 << WGM01 );    // enable CTC
+    TIMSK0 |= (1 << OCIE0A );   // enable compare interrupt 1A
+    sei() ;                     // enable global interrupts
 }
 
 ISR (TIMER0_COMPA_vect) {
