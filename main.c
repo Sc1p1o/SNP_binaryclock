@@ -20,7 +20,7 @@ int main () {
 
 
     TCCR0A |= (1 << WGM01);                 // CTC-Modus aktivieren
-    OCR0A = 125-1;    // Vergleichswert für 1ms
+    OCR0A = 125-1;                              // Vergleichswert für 1ms
     TIMSK0 |= (1 << OCIE0A);                // Compare-Match-Interrupt aktivieren
     TCCR0B |= (1 << CS01);                  // Prescaler 64
     sei();                                  // enable global interrupts
