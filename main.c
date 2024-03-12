@@ -9,34 +9,36 @@ volatile uint16_t ms;
 volatile uint8_t s;
 volatile uint8_t min;
 volatile uint8_t h;
-volatile int run = 1;
+int run = 0;
 
 int main () {
     DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5);
     DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
     DDRB |= (1 << PB3);
-
-    PORTC = 0x01;
+	
+    PORTC = 0x00;
 
 
     TCCR0A |= (1 << WGM01);                 // CTC-Modus aktivieren
-    OCR0A = TICKS_PER_SECOND / 1000 - 1;    // Vergleichswert für 1ms
-    TIMSK0 |= (1 << OCIE0B);                // Compare-Match-Interrupt aktivieren
-    TCCR0B |= (1 << CS02);                  // Prescaler 256
+    OCR0A = 125-1;    // Vergleichswert für 1ms
+    TIMSK0 |= (1 << OCIE0A);                // Compare-Match-Interrupt aktivieren
+    TCCR0B |= (1 << CS01);                  // Prescaler 64
     sei();                                  // enable global interrupts
 
-    while (1) {
-        run = 1;
-    }
+	while(1) {
+		run=1;
+	}
+	
 }
 
 ISR (TIMER0_COMPA_vect) {
     ms++;
 
     //actions every second
-    if(ms >= 1000) {
+    if(ms >= 100) {
         ms=0;
         s++;
+		
 
         //Actions every minute
         if(s >= 60) {
