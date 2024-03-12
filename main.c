@@ -41,6 +41,8 @@ ISR (TIMER0_COMPA_vect) {
                 min=0;
                 PORTC = 0x00;
                 h++;
+                PORTB = (hours & 0x01);
+                PORTD = (hours << 4);
 
                 //Actions every day
                 if(h >= 24) {
@@ -51,3 +53,5 @@ ISR (TIMER0_COMPA_vect) {
         }
     }
 }
+
+// Stunden Ports aufsteigend: PB0, PD7, PD6, PD5, PD4
