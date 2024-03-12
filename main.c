@@ -9,8 +9,9 @@ volatile uint16_t ms;
 volatile uint8_t s;
 volatile uint8_t min;
 volatile uint8_t h;
+volatile int run = true;
 
-void main () {
+int main () {
     DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5);
     DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
     DDRB |= (1 << PB3);
@@ -22,6 +23,10 @@ void main () {
     TIMSK0 |= (1 << OCIE0B);                // Compare-Match-Interrupt aktivieren
     TCCR0B |= (1 << CS02);                  // Prescaler 255
     sei();                                  // enable global interrupts
+
+    while (1) {
+        run = 1;
+    }
 }
 
 ISR (TIMER0_COMPA_vect) {
