@@ -30,7 +30,6 @@ int main () {
     DDRB |= (1 << PB3);
 	
     PORTC = 0x00;
-    PORTB = 0x01;
 
 
     TCCR0A |= (1 << WGM01);                 // CTC-Modus aktivieren
