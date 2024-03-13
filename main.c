@@ -11,6 +11,19 @@ volatile uint8_t min;
 volatile uint8_t h;
 int run = 0;
 
+uint8_t reverseBits(uint8_t value) {
+
+    uint8_t result = 0;
+
+    for (int i = 0; i < 8; ++i) {
+        result <<= 1;
+        result |= (value & 1);
+        value >>= 1;
+    }
+
+    return result;
+}
+
 int main () {
     DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5) | (0 << PC6);
     DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
@@ -65,3 +78,7 @@ ISR (TIMER0_COMPA_vect) {
 }
 
 // Stunden Ports aufsteigend: PB0, PD7, PD6, PD5, PD4
+/**
+ *0000 0000
+ *0001 1000
+ *0010 0100
