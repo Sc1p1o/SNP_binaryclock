@@ -41,6 +41,11 @@ int main () {
 
 	while(1) {
 		run=1;
+
+	    ledHs = h >> 1;
+	    ledHs = reverseBits(ledHs);
+	    PORTD &= 0x0f;
+	    PORTD |= ledHs && 0xf0;
 	}
 }
 
@@ -65,7 +70,6 @@ ISR (TIMER0_COMPA_vect) {
                 PORTC = 0x00;
                 h++;
                 PORTB = (h & 0x01);
-                ledHs = reverseBits(h << 4);
 
                 //Actions every day
                 if(h >= 24) {
@@ -79,6 +83,7 @@ ISR (TIMER0_COMPA_vect) {
 
 // Stunden Ports aufsteigend: PB0, PD7, PD6, PD5, PD4
 /**
- *0000 0000
- *0001 1000
- *0010 0100
+ *0000 0010
+ *0000 0001
+ *1000 0000 - 1000 0000
+ *
