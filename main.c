@@ -28,7 +28,6 @@ int main () {
 	while(1) {
 		run=1;
 	}
-	
 }
 
 ISR (TIMER0_COMPA_vect) {
