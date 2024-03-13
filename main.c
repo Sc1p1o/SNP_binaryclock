@@ -79,10 +79,3 @@ ISR (TIMER0_COMPA_vect) {
         }
     }
 }
-
-// Stunden Ports aufsteigend: PB0, PD7, PD6, PD5, PD4
-/**
- *0000 0010
- *0000 0001
- *1000 0000 - 1000 0000
- *
