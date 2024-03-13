@@ -65,7 +65,7 @@ ISR (TIMER0_COMPA_vect) {
                 PORTC = 0x00;
                 h++;
                 PORTB = (h & 0x01);
-                PORTD = (h << 4);
+                ledHs = reverseBits(h << 4);
 
                 //Actions every day
                 if(h >= 24) {
