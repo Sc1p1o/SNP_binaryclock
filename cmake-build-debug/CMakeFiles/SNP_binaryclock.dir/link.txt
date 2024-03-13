@@ -1,0 +1,3 @@
+"C:\Users\maddi\AppData\Local\Programs\CLion Nova\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\SNP_binaryclock.dir/objects.a
+C:\Users\maddi\AppData\Local\Programs\CLIONN~1\bin\mingw\bin\ar.exe qc CMakeFiles\SNP_binaryclock.dir/objects.a @CMakeFiles\SNP_binaryclock.dir\objects1.rsp
+C:\Users\maddi\AppData\Local\Programs\CLIONN~1\bin\mingw\bin\gcc.exe -g -Wl,--whole-archive CMakeFiles\SNP_binaryclock.dir/objects.a -Wl,--no-whole-archive -o SNP_binaryclock.exe -Wl,--out-implib,libSNP_binaryclock.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\SNP_binaryclock.dir\linkLibs.rsp

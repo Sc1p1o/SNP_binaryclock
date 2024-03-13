@@ -2,4 +2,4 @@ ToolSet: 11.0 w64 (local)@C:\Users\maddi\AppData\Local\Programs\CLion Nova\bin\m
 Ninja: 1.11.1@C:\Users\maddi\AppData\Local\Programs\CLion Nova\bin\ninja\win\x64\ninja.exe
 Options: 
 
-Options:-DCMAKE_MAKE_PROGRAM=C:/Users/maddi/AppData/Local/Programs/CLion Nova/bin/ninja/win/x64/ninja.exe
+Options:
