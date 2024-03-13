@@ -12,7 +12,7 @@ volatile uint8_t h;
 int run = 0;
 
 int main () {
-    DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5);
+    DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5) | (0 << PC6);
     DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
     DDRB |= (1 << PB3);
 	
