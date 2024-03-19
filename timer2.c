@@ -27,7 +27,7 @@ uint8_t reverseBits(uint8_t value) {
 int main () {
     DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5) | (0 << PC6);
     DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
-    DDRB |= (1 << PB3);
+    DDRB |= (1 << PB0);
 	
     PORTC = 0x00;
 
@@ -50,13 +50,45 @@ int main () {
 }
 
 // STUNDEN
-// 0 -> PORTC=  ; PORTB=
-// 1 -> PORTC=  ; PORTB=
-// 2 -> PORTC=  ; PORTB=
-// 3 -> PORTC=  ; PORTB=
-// 4
+// 0 -> PORTD= 0x00 (0000 0000); PORTB= 0x00
+// 1 -> PORTD= 0x00 (0000 0000); PORTB= 0x01
 
+// 2 -> PORTD= 0x80 (1000 0000); PORTB= 0x00
+// 3 -> PORTD= 0x80 (1000 0000); PORTB= 0x01
 
+// 4 -> PORTD= 0x40 (0100 0000); PORTB= 0x00
+// 5 -> PORTD= 0x40 (0100 0000); PORTB= 0x01
+
+// 6 -> PORTD= 0xC0 (1100 0000); PORTB= 0x00
+// 7 -> PORTD= 0xC0 (1100 0000); PORTB= 0x01
+
+// 8 -> PORTD= 0x20 (0010 0000); PORTB= 0x00
+// 9 -> PORTD= 0x20 (0010 0000); PORTB= 0x01
+
+// 10 -> PORTD= 0xA0 (1010 0000); PORTB= 0x00
+// 11 -> PORTD= 0xA0 (1010 0000); PORTB= 0x01
+
+// 12 -> PORTD= 0x60 (0110 0000); PORTB= 0x00
+// 13 -> PORTD= 0x60 (0110 0000); PORTB= 0x01
+
+// 14 -> PORTD= 0xE0 (1110 0000); PORTB= 0x00
+// 15 -> PORTD= 0xE0 (1110 0000); PORTB= 0x01
+
+// 16 -> PORTD= 0x10 (0001 0000); PORTB= 0x00
+// 17 -> PORTD= 0x10 (0001 0000); PORTB= 0x01
+
+// 18 -> PORTD= 0x90 (1001 0000); PORTB= 0x00
+// 19 -> PORTD= 0x90 (1001 0000); PORTB= 0x01
+
+// 20 -> PORTD= 0x50 (0101 0000); PORTB= 0x00
+// 21 -> PORTD= 0x50 (0101 0000); PORTB= 0x01
+
+// 22 -> PORTD= 0xD0 (1101 0000); PORTB= 0x00
+// 23 -> PORTD= 0xD0 (1101 0000); PORTB= 0x01
+
+// Resultat: 
+// PORTB immer abwechselnd 0 und 1
+// PORTD "zählt nach rechts hoch"
 
 
 
