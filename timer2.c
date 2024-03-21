@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <util/delay.h>
 
-#define TICKS_PER_SECOND 16000000UL
+#define TICKS_PER_SECOND 15000000UL
 
 volatile uint16_t ms;
 volatile uint8_t s;
