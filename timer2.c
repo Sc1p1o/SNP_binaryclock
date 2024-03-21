@@ -92,7 +92,7 @@ int main () {
 
 
 
-ISR (TIMER0_COMPA_vect) {
+ISR (TIMER2_COMPA_vect) {
     ms++;
 
     //actions every second
