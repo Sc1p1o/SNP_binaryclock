@@ -25,6 +25,17 @@ uint8_t reverseBits(uint8_t value) {
 }
 
 int main () {
+
+    // Pin PB2 als Eingang konfigurieren
+    DDRD &= ~(1 << PD2);
+
+    // INT0 konfigurieren: Low-Level-Trigger
+    EICRA |= (0 << ISC01) | (0 << ISC00);
+
+    // INT0 aktivieren
+    EIMSK |= (1 << INT0);
+
+
     DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5) | (0 << PC6);
     DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
     DDRB |= (1 << PB0);
@@ -123,7 +134,8 @@ ISR (TIMER2_COMPA_vect) {
     }
 }
 
-ISR(PCINT0_vect){
+//POWER CHANGE INTERRUPT
+ISR(INT0_vect){
 
 }
 
