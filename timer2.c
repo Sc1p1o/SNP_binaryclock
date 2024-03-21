@@ -33,10 +33,10 @@ int main () {
 
     //Timer 2
     TCCR2A |= (1 << WGM21);                 // CTC-Modus aktivieren
-    OCR2A |= 125-1;                         // counter is cleared to zero when the
+    OCR2A |= 256-1;                         // counter is cleared to zero when the
                                             // counter value (TCNT2) matches the OCR2A
     TIMSK2 |= (1 << OCIE2A)                 // Compare Match a interrupt is enable
-    TCCR2B |= (1 << CS22);                  // Prescaler 64
+    TCCR2B |= (1 << CS20) | (1 << CS22);    // Prescaler 128
     sei();                                  // enable global interrupts
 
 	while(1) {
