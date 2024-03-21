@@ -122,3 +122,15 @@ ISR (TIMER2_COMPA_vect) {
         }
     }
 }
+
+ISR(PCINT0_vect){
+
+}
+
+ISR(PCINT1_vect){
+
+}
+
+ISR(PCINT2_vect){
+
+}
