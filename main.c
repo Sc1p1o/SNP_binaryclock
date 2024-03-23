@@ -31,23 +31,20 @@ uint8_t reverseBits(uint8_t value) {
 ISR(TIMER2_OVF_vect) {
     //every second
     s++;
-	
 
     //every minute
-    if(s == 60) {
+    if(s == 6) {
         s=0;
         min++;
-        PORTC++;
 
+			
         //Actions every hour
-        if(min == 59) {
+        if(min >= 59) {
             min=0;
-            PORTC &= 0b1000000;
             h++;
-            PORTB = (h & 0x01);
 
             //every day
-            if(h == 24) {
+            if(h >= 24) {
                 h=0;
 
             }
@@ -65,9 +62,10 @@ int main () {
     PORTC = 0x00;
 
     //Timer 2
-    TCCR2A |= 0x00; 				//normal mode                	
-    TCCR2B |= (1 << CS20) | (1 << CS22);    	// prescaler 128
-    TIMSK2 |= (1 << TOIE2);                 	// enable compare match interrupt
+    TCCR2A |= 0x00;                 // enable CTC
+    TCCR2B |= (1 << CS20) | (1 << CS22);    // prescaler 128
+    //OCR2A = 255;                            // output compare register
+    TIMSK2 |= (1 << TOIE2);                 // enable compare match interrupt
 
 	ASSR |= (1 << AS2); 			        // asynchronous mode for timer 2
 
@@ -76,18 +74,13 @@ int main () {
 	
 		while(1) {
 
-	    if(pwm_on) {
+	    
 	        ledHs = h >> 1;
-	        ledHs = reverseBits(ledHs);
-	        PORTD &= 0x0f;
-	        PORTD |= ledHs && 0xf0;
+			PORTB = (h & 0x01);
+	        PORTD = reverseBits(ledHs);
 	        PORTC = min;
 
-	    } else {
-	        PORTD &= 0x0f;
-	        PORTC = 0x00;
-	        PORTB &= 0b11111110;
-	    }
+	    
 	}
 }
 
