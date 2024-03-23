@@ -37,7 +37,7 @@ ISR(TIMER2_OVF_vect) {
         s=0;
         min++;
 
-
+			
         //Actions every hour
         if(min >= 59) {
             min=0;
@@ -50,7 +50,7 @@ ISR(TIMER2_OVF_vect) {
             }
         }
     }
-
+    
 }
 
 
@@ -69,18 +69,18 @@ int main () {
 
 	ASSR |= (1 << AS2); 			        // asynchronous mode for timer 2
 
-    sei();
-
-
+    sei();           
+	
+	
 		while(1) {
 
-
+	    
 	        ledHs = h >> 1;
 			PORTB = (h & 0x01);
 	        PORTD = reverseBits(ledHs);
 	        PORTC = min;
 
-
+	    
 	}
 }
 
