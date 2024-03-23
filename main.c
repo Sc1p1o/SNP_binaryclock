@@ -10,6 +10,7 @@ volatile uint16_t ms;
 volatile uint8_t s;
 volatile uint8_t min;
 volatile uint8_t h;
+volatile uint8_t ledHs;
 volatile int pwm_time = 10;
 volatile int pwm_counter = 0;
 volatile uint8_t pwm_on = 1;
@@ -106,7 +107,7 @@ int main () {
     TCCR2A |= (1 << WGM21);                 // CTC-Modus aktivieren
     OCR2A |= 255;                           // counter is cleared to zero when the
                                             // counter value (TCNT2) matches the OCR2A
-    TIMSK2 |= (1 << OCIE2A)                 // Compare Match a interrupt is enable
+    TIMSK2 |= (1 << OCIE2A);                 // Compare Match a interrupt is enable
     TCCR2B |= (1 << CS20) | (1 << CS22);    // Prescaler 128
 
 	ASSR |= (1 << AS2); 			        // asynchronous mode for timer 2
