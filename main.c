@@ -10,6 +10,7 @@ volatile uint16_t ms;
 volatile uint8_t s;
 volatile uint8_t min;
 volatile uint8_t h;
+volatile uint8_t ledHs;
 volatile int pwm_time = 10;
 volatile int pwm_counter = 0;
 volatile uint8_t pwm_on = 1;
@@ -27,75 +28,33 @@ uint8_t reverseBits(uint8_t value) {
     return result;
 }
 
-ISR (TIMER2_COMPA_vect) {
-    ms++;
-    pwm_counter++;
+ISR(TIMER2_OVF_vect) {
+    //every second
+    s++;
 
-    //Software pwm
-    if(pwm_time == pwm_counter) {
-        pwm_counter = 0;
-        if(pwm_on == 1) {
-            pwm_on = 0;
-        } else {
-            pwm_on = 1;
-        }
-    }
+    //every minute
+    if(s == 6) {
+        s=0;
+        min++;
 
-    //actions every second
-    if(ms >= 100) {
-        ms=0;
-        s++;
 
-        //Actions every minute
-        if(s >= 60) {
-            s=0;
-            min++;
-            PORTC++;
+        //Actions every hour
+        if(min >= 59) {
+            min=0;
+            h++;
 
-            //Actions every hour
-            if(min >= 60) {
-                min=0;
-                PORTC &= 0b100000;
-                h++;
-                PORTB = (h & 0x01);
+            //every day
+            if(h >= 24) {
+                h=0;
 
-                //Actions every day
-                if(h >= 24) {
-                    h=0;
-
-                }
             }
         }
     }
-}
-
-//POWER CHANGE INTERRUPT
-ISR(INT0_vect){
-    PORTC = 0x00;
-    PORTC = 0x0f;
 
 }
 
-ISR(PCINT1_vect){
-
-}
-
-ISR(PCINT2_vect){
-
-}
 
 int main () {
-
-    // Pin PB2 als Eingang konfigurieren
-    DDRD &= ~(1 << PD2);
-
-    // INT0 konfigurieren: Low-Level-Trigger
-    EICRA |= (0 << ISC01) | (0 << ISC00);
-
-    // INT0 aktivieren
-    EIMSK |= (1 << INT0);
-
-
     DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5) | (0 << PC6);
     DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
     DDRB |= (1 << PB0);
@@ -103,29 +62,25 @@ int main () {
     PORTC = 0x00;
 
     //Timer 2
-    TCCR2A |= (1 << WGM21);                 // CTC-Modus aktivieren
-    OCR2A |= 255;                           // counter is cleared to zero when the
-                                            // counter value (TCNT2) matches the OCR2A
-    TIMSK2 |= (1 << OCIE2A)                 // Compare Match a interrupt is enable
-    TCCR2B |= (1 << CS20) | (1 << CS22);    // Prescaler 128
+    TCCR2A |= 0x00;                 // enable CTC
+    TCCR2B |= (1 << CS20) | (1 << CS22);    // prescaler 128
+    //OCR2A = 255;                            // output compare register
+    TIMSK2 |= (1 << TOIE2);                 // enable compare match interrupt
 
 	ASSR |= (1 << AS2); 			        // asynchronous mode for timer 2
-    sei();                                  // enable global interrupts
 
-	while(1) {
+    sei();
 
-	    if(pwm_on) {
+
+		while(1) {
+
+
 	        ledHs = h >> 1;
-	        ledHs = reverseBits(ledHs);
-	        PORTD &= 0x0f;
-	        PORTD |= ledHs && 0xf0;
+			PORTB = (h & 0x01);
+	        PORTD = reverseBits(ledHs);
 	        PORTC = min;
 
-	    } else {
-	        PORTD &= 0x0f;
-	        PORTC = 0x00;
-	        PORTB &= 0b11111110;
-	    }
+
 	}
 }
 
@@ -165,7 +120,3 @@ int main () {
 
 // 22 -> PORTD= 0xD0 (1101 0000); PORTB= 0x00
 // 23 -> PORTD= 0xD0 (1101 0000); PORTB= 0x01
-
-// Resultat:
-// PORTB immer abwechselnd 0 und 1
-// PORTD "zählt nach rechts hoch"
