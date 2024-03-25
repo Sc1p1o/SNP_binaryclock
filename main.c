@@ -33,6 +33,8 @@ uint8_t reverseBits(uint8_t value) {
 ISR(TIMER2_OVF_vect) {
     //every second
     s++;
+
+	//handle minute inaccuracy
 	if (schalt_min_counter == 20) {
 		s++;
 		schalt_min_counter = 0;
