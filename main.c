@@ -1,7 +1,6 @@
 #include <avr/io.h >
 #include <avr/interrupt.h >
 #include <stdint.h>
-#include <stdbool.h>
 #include <util/delay.h>
 
 #define TICKS_PER_SECOND 15000000UL
@@ -14,6 +13,7 @@ volatile uint8_t ledHs;
 volatile int pwm_time = 10;
 volatile int pwm_counter = 0;
 volatile uint8_t pwm_on = 1;
+volatile uint8_t power_on = 1;
 
 uint8_t reverseBits(uint8_t value) {
 
@@ -73,11 +73,22 @@ int main () {
 	
 	
 	while(1) {
-		if (pwm_on == 1) {
-			ledHs = h >> 1;
-			PORTB = (h & 0x01);
-			PORTD = reverseBits(ledHs);
-			PORTC = min;
+
+		//sleep mode handling
+		if (power_on == 1) {
+			//pwm on or off phase depending on pwm_on
+			if (pwm_on == 1) {
+				ledHs = h >> 1;
+				PORTB = (h & 0x01);
+				PORTD = reverseBits(ledHs);
+				PORTC = min;
+
+			} else {
+				PORTB = (0x0);
+				PORTC = 0x00;
+				PORTD &= 0x0f;
+			}
+
 		} else {
 			PORTB = (0x0);
 			PORTC = 0x00;
@@ -85,40 +96,3 @@ int main () {
 		}
 	}
 }
-
-// STUNDEN
-// 0 -> PORTD= 0x00 (0000 0000); PORTB= 0x00
-// 1 -> PORTD= 0x00 (0000 0000); PORTB= 0x01
-
-// 2 -> PORTD= 0x80 (1000 0000); PORTB= 0x00
-// 3 -> PORTD= 0x80 (1000 0000); PORTB= 0x01
-
-// 4 -> PORTD= 0x40 (0100 0000); PORTB= 0x00
-// 5 -> PORTD= 0x40 (0100 0000); PORTB= 0x01
-
-// 6 -> PORTD= 0xC0 (1100 0000); PORTB= 0x00
-// 7 -> PORTD= 0xC0 (1100 0000); PORTB= 0x01
-
-// 8 -> PORTD= 0x20 (0010 0000); PORTB= 0x00
-// 9 -> PORTD= 0x20 (0010 0000); PORTB= 0x01
-
-// 10 -> PORTD= 0xA0 (1010 0000); PORTB= 0x00
-// 11 -> PORTD= 0xA0 (1010 0000); PORTB= 0x01
-
-// 12 -> PORTD= 0x60 (0110 0000); PORTB= 0x00
-// 13 -> PORTD= 0x60 (0110 0000); PORTB= 0x01
-
-// 14 -> PORTD= 0xE0 (1110 0000); PORTB= 0x00
-// 15 -> PORTD= 0xE0 (1110 0000); PORTB= 0x01
-
-// 16 -> PORTD= 0x10 (0001 0000); PORTB= 0x00
-// 17 -> PORTD= 0x10 (0001 0000); PORTB= 0x01
-
-// 18 -> PORTD= 0x90 (1001 0000); PORTB= 0x00
-// 19 -> PORTD= 0x90 (1001 0000); PORTB= 0x01
-
-// 20 -> PORTD= 0x50 (0101 0000); PORTB= 0x00
-// 21 -> PORTD= 0x50 (0101 0000); PORTB= 0x01
-
-// 22 -> PORTD= 0xD0 (1101 0000); PORTB= 0x00
-// 23 -> PORTD= 0xD0 (1101 0000); PORTB= 0x01
