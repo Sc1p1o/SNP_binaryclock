@@ -72,15 +72,17 @@ int main () {
     sei();           
 	
 	
-		while(1) {
-
-	    
-	        ledHs = h >> 1;
+	while(1) {
+		if (pwm_on == 1) {
+			ledHs = h >> 1;
 			PORTB = (h & 0x01);
-	        PORTD = reverseBits(ledHs);
-	        PORTC = min;
-
-	    
+			PORTD = reverseBits(ledHs);
+			PORTC = min;
+		} else {
+			PORTB = (0x0);
+			PORTC = 0x00;
+			PORTD &= 0x0f;
+		}
 	}
 }
 
