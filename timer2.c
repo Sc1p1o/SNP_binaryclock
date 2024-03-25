@@ -3,13 +3,20 @@
 #include <stdint.h>
 #include <util/delay.h>
 
-#define TICKS_PER_SECOND 16000000UL
+#define TICKS_PER_SECOND 15000000UL
 
 volatile uint16_t ms;
 volatile uint8_t s;
 volatile uint8_t min;
 volatile uint8_t h;
-int run = 0;
+volatile uint8_t ledHs;
+volatile unsigned int pwm_time = 100;
+volatile int pwm_counter = 0;
+volatile uint8_t pwm_on = 1;
+volatile uint8_t power_on = 1;
+volatile uint8_t sleep_button_available = 1;
+volatile uint8_t schalt_min_counter = 0;
+volatile uint8_t pc17_button_available = 1;
 
 uint8_t reverseBits(uint8_t value) {
 
@@ -24,58 +31,120 @@ uint8_t reverseBits(uint8_t value) {
     return result;
 }
 
-int main () {
-    DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5) | (0 << PC6);
-    DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
-    DDRB |= (1 << PB3);
+ISR(TIMER2_OVF_vect) {
+    //every second
+    s++;
+	if (schalt_min_counter == 20) {
+		s++;
+		schalt_min_counter = 0;
+	}
 
-    PORTC = 0x00;
-
-
-    TCCR0A |= (1 << WGM01);                 // CTC-Modus aktivieren
-    OCR0A = 125-1;                          // Vergleichswert für 1ms
-    TIMSK0 |= (1 << OCIE0A);                // Compare-Match-Interrupt aktivieren
-    TCCR0B |= (1 << CS01);                  // Prescaler 64
-    sei();                                  // enable global interrupts
-
-    while(1) {
-        run=1;
-
-        ledHs = h >> 1;
-        ledHs = reverseBits(ledHs);
-        PORTD &= 0x0f;
-        PORTD |= ledHs && 0xf0;
-    }
-}
-
-ISR (TIMER0_COMPA_vect) {
-    ms++;
-
-    //actions every second
-    if(ms >= 100) {
-        ms=0;
-        s++;
+	if(sleep_button_available == 0) {
+		sleep_button_available = 1;
+	}
+    //every minute
+    if(s == 6) {
+        s=0;
 
 
-        //Actions every minute
-        if(s >= 60) {
-            s=0;
-            min++;
-            PORTC++;
+        min++;
 
-            //Actions every hour
-            if(min >= 60) {
-                min=0;
-                PORTC = 0x00;
-                h++;
-                PORTB = (h & 0x01);
+			
+        //Actions every hour
+        if(min >= 59) {
+            min=0;
+            h++;
 
-                //Actions every day
-                if(h >= 24) {
-                    h=0;
+            //every day
+            if(h >= 24) {
+                h=0;
 
-                }
             }
         }
     }
+    
+}
+ISR(INT0_vect) {
+
+	if(sleep_button_available == 1) {
+		sleep_button_available = 0;
+		if(power_on == 1) {
+			power_on--;
+			SMCR &= (0 << SM2);
+			SMCR |= (1 << SM1) | (1 << SM0);
+		} else {
+			power_on++;
+		}
+	}
+	
+}
+
+ISR (TIMER0_COMPA_vect) {
+	pwm_counter++;
+	if(pwm_counter == pwm_time){
+
+		if(pwm_on == 1){
+			pwm_on = 0;
+		} else {
+			pwm_on = 1;
+		}
+	}
+	
+	
+}
+
+
+int main () {
+    DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5) | (0 << PC6);
+    DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
+    DDRB |= (1 << PB0);
+
+    PORTC = 0x00;
+
+	//INT0
+	DDRD &= ~(1 << PD2);
+	PORTD |= (1 << PD2);
+	EICRA |= (1 << ISC01);
+	EIMSK |= (1 << INT0);
+	
+	//Timer 0
+    TCCR0A |= (1 << WGM01);                 // CTC-Modus aktivieren
+    OCR0A = 125-1;                          // Vergleichswert für 1ms
+    TIMSK0 |= (1 << OCIE0A);                // Compare-Match-Interrupt aktivieren
+    TCCR0B |= (1 << CS01);                  // Prescaler 64	
+
+    //Timer 2
+    TCCR2A |= 0x00;                 // enable CTC
+    TCCR2B |= (1 << CS20) | (1 << CS22);    // prescaler 128
+    //OCR2A = 255;                            // output compare register
+    TIMSK2 |= (1 << TOIE2);                 // enable compare match interrupt
+
+	ASSR |= (1 << AS2); 			        // asynchronous mode for timer 2
+
+    sei();           
+	
+	
+	while(1) {
+
+		//sleep mode handling
+		if (power_on == 1) {
+			//pwm on or off phase depending on pwm_on
+			if (pwm_on == 1) {
+				ledHs = h >> 1;
+				PORTB = (h & 0x01);
+				PORTD &= (0x0f | reverseBits(ledHs));
+				PORTC = min;
+
+			} else {
+				PORTB = (0x00);
+				PORTC = 0x00;
+				PORTD &= 0x0f;
+			}
+
+		} else {
+			PORTB = (0x0);
+			PORTC = 0x00;
+			PORTD &= 0x0f;
+		}
+	}
 }
