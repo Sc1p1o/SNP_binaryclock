@@ -33,7 +33,7 @@ ISR(TIMER2_OVF_vect) {
     s++;
 
     //every minute
-    if(s == 6) {
+    if(s == 60) {
         s=0;
         min++;
 
