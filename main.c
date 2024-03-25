@@ -78,6 +78,13 @@ ISR(INT0_vect) {
 	}
 }
 
+ISR(PCINT1_vect) {
+	// Überprüfe, ob der Interrupt durch PCINT17 ausgelöst wurde
+	if (PINB & (1 << PD1)) {
+		// Führen Sie hier den Code aus, der auf den Tastendruck reagieren soll
+	}
+}
+
 
 int main () {
 	//Pin Setup
@@ -88,6 +95,15 @@ int main () {
     PORTC = 0x00;
 
 	DDRD &= ~(1 << PD2);
+
+
+	// Konfiguriere den Button-Pin als Eingang
+	DDRC &= ~(1 << PD1);
+	// Aktiviere den Pin Change Interrupt nur für PCINT17
+	PCMSK2 |= (1 << PCINT17);
+	// Aktiviere Pin Change Interrupts global nur für PCINT17
+	PCICR |= (1 << PCIE1);
+
 
 	// Aktiviere INT0 und konfiguriere ihn für steigende Flanke
 	EICRA |= (1 << ISC01) | (1 << ISC00);
