@@ -79,9 +79,9 @@ ISR(INT0_vect) {
 }
 
 ISR(PCINT1_vect) {
+
 	// Überprüfe, ob der Interrupt durch PCINT17 ausgelöst wurde
 	if (PINB & (1 << PD1)) {
-		// Führen Sie hier den Code aus, der auf den Tastendruck reagieren soll
 	}
 }
 
