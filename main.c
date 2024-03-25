@@ -1,6 +1,7 @@
 #include <avr/io.h >
 #include <avr/interrupt.h >
 #include <stdint.h>
+#include <avr/sleep.h>
 #include <util/delay.h>
 
 #define TICKS_PER_SECOND 15000000UL
@@ -58,7 +59,6 @@ ISR(TIMER2_OVF_vect) {
             }
         }
     }
-    
 }
 ISR(INT0_vect) {
 
@@ -66,6 +66,7 @@ ISR(INT0_vect) {
 		sleep_button_available = 0;
 		if(power_on == 1) {
 			power_on = 0;
+			sleep_mode();
 		} else {
 			power_on = 1;
 		}
@@ -94,6 +95,8 @@ int main () {
 
 	ASSR |= (1 << AS2); 			        // asynchronous mode for timer 2
 
+	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+
     sei();           
 	
 	
@@ -115,6 +118,7 @@ int main () {
 			}
 
 		} else {
+			sleep_mode();
 			PORTB &= 0x00;
 			PORTC &= 0x00;
 			PORTD &= 0x0f;
