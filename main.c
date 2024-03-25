@@ -64,7 +64,7 @@ ISR(INT0_vect) {
 
 	if(sleep_button_available == 1) {
 		sleep_button_available = 0;
-	if(power_on == 1) {
+		if(power_on == 1) {
 			power_on = 0;
 		} else {
 			power_on = 1;
@@ -109,14 +109,14 @@ int main () {
 				PORTC = min;
 
 			} else {
-				PORTB = (0x00);
-				PORTC = 0x00;
+				PORTB &= 0x00;
+				PORTC &= 0x00;
 				PORTD &= 0x0f;
 			}
 
 		} else {
-			PORTB = (0x0);
-			PORTC = 0x00;
+			PORTB &= 0x00;
+			PORTC &= 0x00;
 			PORTD &= 0x0f;
 		}
 	}
