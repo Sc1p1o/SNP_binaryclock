@@ -15,6 +15,7 @@ volatile int pwm_counter = 0;
 volatile uint8_t pwm_on = 1;
 volatile uint8_t power_on = 1;
 volatile uint8_t sleep_button_available = 1;
+volatile uint8_t schalt_min_counter = 0;
 
 uint8_t reverseBits(uint8_t value) {
 
@@ -32,6 +33,10 @@ uint8_t reverseBits(uint8_t value) {
 ISR(TIMER2_OVF_vect) {
     //every second
     s++;
+	if (schalt_min_counter == 20) {
+		s++;
+		schalt_min_counter = 0;
+	}
 
 	if(sleep_button_available == 0) {
 		sleep_button_available++;
@@ -41,6 +46,7 @@ ISR(TIMER2_OVF_vect) {
     if(s == 60) {
         s=0;
         min++;
+    	schalt_min_counter++;
 
 			
         //Actions every hour
