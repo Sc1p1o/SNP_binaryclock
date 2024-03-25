@@ -14,6 +14,7 @@ volatile int pwm_time = 10;
 volatile int pwm_counter = 0;
 volatile uint8_t pwm_on = 1;
 volatile uint8_t power_on = 1;
+volatile uint8_t sleep_button_available = 1;
 
 uint8_t reverseBits(uint8_t value) {
 
@@ -31,6 +32,10 @@ uint8_t reverseBits(uint8_t value) {
 ISR(TIMER2_OVF_vect) {
     //every second
     s++;
+
+	if(sleep_button_available == 0) {
+		sleep_button_available++;
+	}
 
     //every minute
     if(s == 60) {
@@ -53,13 +58,37 @@ ISR(TIMER2_OVF_vect) {
     
 }
 
+ISR(INT0_vect) {
+
+	if(sleep_button_available == 1) {
+		sleep_button_available = 0;
+		if(power_on == 1) {
+			power_on--;
+		} else {
+			power_on++;
+		}
+	}
+}
+
 
 int main () {
+	//Pin Setup
     DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) |(1 << PC4) |(1 << PC5) | (0 << PC6);
     DDRD |= (1 << PD7) | (1 << PD6) | (1 << PD5) | (1 << PD4);
     DDRB |= (1 << PB0);
 
     PORTC = 0x00;
+
+	DDRD &= ~(1 << PD2);
+
+	// Aktiviere INT0 und konfiguriere ihn für steigende Flanke
+	EICRA |= (1 << ISC01) | (1 << ISC00);
+	EIMSK |= (1 << INT0);
+
+	// Aktiviere INT0 und konfiguriere ihn für fallende Flanke
+	//EICRA |= (1 << ISC01);
+	//EIMSK |= (1 << INT0);
+
 
     //Timer 2
     TCCR2A |= 0x00;                 // enable CTC
