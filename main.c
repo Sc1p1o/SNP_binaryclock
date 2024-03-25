@@ -65,8 +65,14 @@ ISR(TIMER2_OVF_vect) {
 }
 ISR(INT0_vect) {
 
-	min++;
-	
+	if(sleep_button_available == 1) {
+		sleep_button_available = 0;
+	if(power_on == 1) {
+			power_on--;
+		} else {
+			power_on++;
+		}
+	}
 	
 }
 
