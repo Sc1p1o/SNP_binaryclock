@@ -14,6 +14,8 @@ volatile int pwm_time = 10;
 volatile int pwm_counter = 0;
 volatile uint8_t pwm_on = 1;
 volatile uint8_t power_on = 1;
+volatile uint8_t sleep_button_available = 1;
+volatile uint8_t schalt_min_counter = 0;
 
 uint8_t reverseBits(uint8_t value) {
 
@@ -31,10 +33,19 @@ uint8_t reverseBits(uint8_t value) {
 ISR(TIMER2_OVF_vect) {
     //every second
     s++;
+	if (schalt_min_counter == 20) {
+		s++;
+		schalt_min_counter = 0;
+	}
 
+	if(sleep_button_available == 0) {
+		sleep_button_available = 1;
+	}
     //every minute
-    if(s == 60) {
+    if(s == 6) {
         s=0;
+
+
         min++;
 
 			
@@ -52,6 +63,12 @@ ISR(TIMER2_OVF_vect) {
     }
     
 }
+ISR(INT0_vect) {
+
+	min++;
+	
+	
+}
 
 
 int main () {
@@ -60,6 +77,11 @@ int main () {
     DDRB |= (1 << PB0);
 
     PORTC = 0x00;
+
+	DDRD &= ~(1 << PD2);
+	PORTD |= (1 << PD2);
+	EICRA |= (1 << ISC01);
+	EIMSK |= (1 << INT0);
 
     //Timer 2
     TCCR2A |= 0x00;                 // enable CTC
@@ -80,11 +102,11 @@ int main () {
 			if (pwm_on == 1) {
 				ledHs = h >> 1;
 				PORTB = (h & 0x01);
-				PORTD = reverseBits(ledHs);
+				PORTD &= (0x0f | reverseBits(ledHs));
 				PORTC = min;
 
 			} else {
-				PORTB = (0x0);
+				PORTB = (0x00);
 				PORTC = 0x00;
 				PORTD &= 0x0f;
 			}
