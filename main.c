@@ -42,12 +42,9 @@ ISR(TIMER2_OVF_vect) {
 		sleep_button_available = 1;
 	}
     //every minute
-    if(s == 6) {
+    if(s >= 6) {
         s=0;
-
-
         min++;
-
 			
         //Actions every hour
         if(min >= 59) {
@@ -68,9 +65,9 @@ ISR(INT0_vect) {
 	if(sleep_button_available == 1) {
 		sleep_button_available = 0;
 	if(power_on == 1) {
-			power_on--;
+			power_on = 0;
 		} else {
-			power_on++;
+			power_on = 1;
 		}
 	}
 	
