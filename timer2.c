@@ -88,10 +88,9 @@ int main () {
 	EIMSK |= (1 << INT0);
 
     //Timer 2
-    TCCR2A |= 0x00;                 // enable CTC
+    TCCR2A |= 0x00;              
     TCCR2B |= (1 << CS20) | (1 << CS22);    // prescaler 128
-    //OCR2A = 255;                            // output compare register
-    TIMSK2 |= (1 << TOIE2);                 // enable compare match interrupt
+    TIMSK2 |= (1 << TOIE2);                
 
 	ASSR |= (1 << AS2); 			        // asynchronous mode for timer 2
 
