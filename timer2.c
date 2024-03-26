@@ -11,7 +11,7 @@ volatile uint8_t s;
 volatile uint8_t min;
 volatile uint8_t h;
 volatile uint8_t ledHs;
-volatile int pwm_time = 0;
+volatile int pwm_time = 100;
 volatile int pwm_counter = 0;
 volatile uint8_t pwm_on = 1;
 volatile uint8_t power_on = 1;
